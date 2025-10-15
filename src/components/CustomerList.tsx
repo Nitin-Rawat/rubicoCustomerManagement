@@ -24,7 +24,7 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
 
   const filteredAndSortedCustomers = useMemo(() => {
     let filtered = customers.filter((customer) =>
-      customer.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customer.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       customer.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       customer.phone?.includes(searchQuery)
     );
@@ -32,9 +32,9 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'name-asc':
-          return a.full_name.localeCompare(b.full_name);
+          return a.fullName.localeCompare(b.fullName);
         case 'name-desc':
-          return b.full_name.localeCompare(a.full_name);
+          return b.fullName.localeCompare(a.fullName);
         case 'recent':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         case 'oldest':
@@ -43,6 +43,7 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
           return 0;
       }
     });
+
 
     return filtered;
   }, [customers, searchQuery, sortBy]);
@@ -163,7 +164,7 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
                         className="hover:bg-[#E6F7F9]/30 transition-colors duration-150"
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="font-medium text-gray-900">{customer.full_name}</div>
+                          <div className="font-medium text-gray-900">{customer.fullName}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-gray-700">{customer.email || '-'}</div>
@@ -173,8 +174,8 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-gray-700 max-w-xs truncate">
-                            {customer.billing_address}
-                          </div>
+                            {customer.billingAddress}
+                      ˀ    </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center justify-center gap-2">

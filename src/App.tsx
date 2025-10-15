@@ -48,12 +48,12 @@ function App() {
 
   const handleAddCustomer = async (data: CustomerFormData) => {
     const payload = {
-      full_name: data.fullName,
+      fullName: data.fullName,
       email: data.email || undefined,
       phone: data.phone || undefined,
-      billing_address: data.billingAddress,
-      shipping_same_as_billing: data.shippingSameAsBilling,
-      shipping_address: data.shippingAddress || undefined,
+      billingAddress: data.billingAddress,
+      shippingSameAsBilling: data.shippingSameAsBilling,
+      shippingAddress: data.shippingAddress || undefined,
     };
 
     try {
@@ -129,12 +129,12 @@ function App() {
           initialData={
             editingCustomer
               ? {
-                  fullName: editingCustomer.full_name,
+                  fullName: editingCustomer.fullName,
                   email: editingCustomer.email || '',
                   phone: editingCustomer.phone || '',
-                  billingAddress: editingCustomer.billing_address,
-                  shippingSameAsBilling: editingCustomer.shipping_same_as_billing,
-                  shippingAddress: editingCustomer.shipping_address || '',
+                  billingAddress: editingCustomer.billingAddress,
+                  shippingSameAsBilling: editingCustomer.shippingSameAsBilling,
+                  shippingAddress: editingCustomer.shippingAddress || '',
                 }
               : undefined
           }

@@ -7,9 +7,7 @@ import { Input } from './ui/Input';
 import { Textarea } from './ui/Textarea';
 import { Card } from './ui/Card';
 import { customerSchema, CustomerFormData } from '../lib/validation/customerSchema';
-
-import { customerRepository } from '../services/LocalForageCustomerRepository';
-
+import { customerRepository } from '../services';
 
 customerRepository.getAll();
 
@@ -62,9 +60,10 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
     }
 
     const isValid = await trigger(fieldsToValidate);
+    console.log('Is valid:', isValid);
     if (isValid) {
       setCurrentStep((prev) => Math.min(prev + 1, 3));
-    }
+    } 
   };
 
   const handleBack = () => {
@@ -100,10 +99,10 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
                   <div className="flex flex-col items-center flex-1">
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isCompleted
-                          ? 'bg-[#00B1BE] text-white'
-                          : isActive
-                            ? 'bg-gradient-to-r from-[#00B1BE] to-[#0094C6] text-white shadow-lg scale-110'
-                            : 'bg-white text-gray-400 border-2 border-gray-300'
+                        ? 'bg-[#00B1BE] text-white'
+                        : isActive
+                          ? 'bg-gradient-to-r from-[#00B1BE] to-[#0094C6] text-white shadow-lg scale-110'
+                          : 'bg-white text-gray-400 border-2 border-gray-300'
                         }`}
                     >
                       <Icon size={20} />
@@ -151,6 +150,11 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
                     type="email"
                     placeholder="john@example.com"
                     {...register('email', {
+                      required: "Email or phone is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email"
+                      },
                       validate: validateEmailUnique
                     })}
                     error={errors.email?.message}

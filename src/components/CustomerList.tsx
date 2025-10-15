@@ -175,7 +175,7 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
                         <td className="px-6 py-4">
                           <div className="text-gray-700 max-w-xs truncate">
                             {customer.billingAddress}
-                      ˀ    </div>
+                 </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center justify-center gap-2">

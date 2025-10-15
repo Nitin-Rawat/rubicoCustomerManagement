@@ -9,7 +9,7 @@ import { Card } from './ui/Card';
 import { customerSchema, CustomerFormData } from '../lib/validation/customerSchema';
 import { customerRepository } from '../services';
 
-customerRepository.getAll();
+// customerRepository.getAll();
 
 interface AddCustomerProps {
   onSubmit: (data: CustomerFormData) => void;

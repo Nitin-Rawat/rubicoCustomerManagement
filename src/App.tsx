@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { CustomerList } from './components/CustomerList';
-import { AddCustomer,  } from './components/AddCustomer';
+import { AddCustomer } from './components/AddCustomer';
 import { Toast } from './components/ui/Toast';
-import { Modal } from './components/ui/Modal'; 
+import { Modal } from './components/ui/Modal';
 import { Customer } from './lib/types';
 import { CustomerFormData } from './lib/validation/customerSchema';
 import { customerRepository } from './services';
@@ -18,7 +18,6 @@ function App() {
   const [screen, setScreen] = useState<Screen>('list');
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
-  const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; customerId: string | null }>({
@@ -129,13 +128,13 @@ function App() {
           initialData={
             editingCustomer
               ? {
-                  fullName: editingCustomer.fullName,
-                  email: editingCustomer.email || '',
-                  phone: editingCustomer.phone || '',
-                  billingAddress: editingCustomer.billingAddress,
-                  shippingSameAsBilling: editingCustomer.shippingSameAsBilling,
-                  shippingAddress: editingCustomer.shippingAddress || '',
-                }
+                fullName: editingCustomer.fullName,
+                email: editingCustomer.email || '',
+                phone: editingCustomer.phone || '',
+                billingAddress: editingCustomer.billingAddress,
+                shippingSameAsBilling: editingCustomer.shippingSameAsBilling,
+                shippingAddress: editingCustomer.shippingAddress || '',
+              }
               : undefined
           }
           isEditing={screen === 'edit'}

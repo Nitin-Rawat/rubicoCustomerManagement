@@ -6,4 +6,5 @@ export interface ICustomerRepository {
   getAll(): Promise<Customer[]>;
   delete(id: string): Promise<void>;
   emailExists(email: string): Promise<boolean>;
+  phoneExists(phone: string): Promise<boolean>;
 }

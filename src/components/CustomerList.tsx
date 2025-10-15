@@ -13,7 +13,7 @@ interface CustomerListProps {
   onDelete: (id: string) => void;
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 type SortOption = 'name-asc' | 'name-desc' | 'recent' | 'oldest';
 
@@ -152,6 +152,9 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                         Billing Address
                       </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                        Shipping Address
+                      </th>
                       <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                         Actions
                       </th>
@@ -175,7 +178,12 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
                         <td className="px-6 py-4">
                           <div className="text-gray-700 max-w-xs truncate">
                             {customer.billingAddress}
-                 </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-gray-700 max-w-xs truncate">
+                            {customer.shippingAddress || customer.shippingSameAsBilling && "SAME"}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center justify-center gap-2">
@@ -201,37 +209,68 @@ export const CustomerList = ({ customers, onAddNew, onEdit, onDelete }: Customer
                 </table>
               </div>
 
-              {totalPages > 1 && (
-                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-600">
-                      Page {currentPage} of {totalPages}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="gap-1"
-                      >
-                        <ChevronLeft size={16} />
-                        Previous
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="gap-1"
-                      >
-                        Next
-                        <ChevronRight size={16} />
-                      </Button>
+                {totalPages > 1 && (
+                  <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-gray-600">
+                        Page {currentPage} of {totalPages}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {/* Previous Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="gap-1"
+                        >
+                          <ChevronLeft size={16} />
+                        </Button>
+
+                        {/* Page numbers */}
+                        {[1, 2].map((page) => (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`px-3 py-1 rounded-md text-sm transition-colors ${page === currentPage
+                                ? "bg-[#00B1BE] text-white"
+                                : "bg-white text-gray-700 hover:bg-gray-200"
+                              }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+
+                        {/* Ellipsis if needed */}
+                        {totalPages > 3 && <span className="px-2">...</span>}
+
+                        {/* Last page */}
+                        {totalPages > 2 && (
+                          <button
+                            onClick={() => handlePageChange(totalPages)}
+                            className={`px-3 py-1 rounded-md text-sm transition-colors ${currentPage === totalPages
+                                ? "bg-[#00B1BE] text-white"
+                                : "bg-white text-gray-700 hover:bg-gray-200"
+                              }`}
+                          >
+                            {totalPages}
+                          </button>
+                        )}
+
+                        {/* Next Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className="gap-1"
+                        >
+                          <ChevronRight size={16} />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
             </>
           )}
         </Card>

@@ -56,10 +56,23 @@ export class LocalForageCustomerRepository implements ICustomerRepository {
     await this.saveIndex(idx.filter((k) => k !== id));
   }
 
+  
+  /** ✅ Async email uniqueness check */
   async emailExists(email: string): Promise<boolean> {
     if (!email) return false;
     const all = await this.getAll();
-    return all.some((c) => c.email?.toLowerCase() === email.toLowerCase());
+    return all.some(
+      (c) => c.email?.toLowerCase().trim() === email.toLowerCase().trim()
+    );
+  }
+
+  /** ✅ Async phone uniqueness check */
+  async phoneExists(phone: string): Promise<boolean> {
+    if (!phone) return false;
+    const all = await this.getAll();
+    return all.some(
+      (c) => c.phone?.replace(/\s+/g, "") === phone.replace(/\s+/g, "")
+    );
   }
 }
 

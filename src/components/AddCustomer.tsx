@@ -49,21 +49,55 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
     const exists = await customerRepository.emailExists(email);
     return !exists || "Email already exists";
   };
+  
+  const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Prevent form submission
 
-  const handleNext = async () => {
     let fieldsToValidate: (keyof CustomerFormData)[] = [];
 
     if (currentStep === 1) {
       fieldsToValidate = ['fullName', 'email', 'phone'];
+      // Validate form fields first
+      const isValid = await trigger(fieldsToValidate);
+      if (!isValid) return;
+      // Check email uniqueness for new customers or if email changed
+      if (formData.email && (!isEditing || initialData?.email !== formData.email)) {
+        const emailExists = await customerRepository.emailExists(formData.email);
+        if (emailExists) {
+          form.setError('email', {
+            type: 'manual',
+            message: 'Email already exists'
+          });
+          return;
+        }
+      }
+
+      // Check phone uniqueness for new customers or if phone changed
+      if (formData.phone && (!isEditing || initialData?.phone !== formData.phone)) {
+        const phoneExists = await customerRepository.phoneExists(formData.phone);
+        if (phoneExists) {
+          form.setError('phone', {
+            type: 'manual',
+            message: 'Phone number already exists'
+          });
+          return;
+        }
+      }
+
+      setCurrentStep(2);
+      return;
+
     } else if (currentStep === 2) {
-      fieldsToValidate = ['billingAddress', 'shippingSameAsBilling', 'shippingAddress'];
+      fieldsToValidate = ['billingAddress'];
+      if (!formData.shippingSameAsBilling) {
+        fieldsToValidate.push('shippingAddress');
+      }
     }
 
     const isValid = await trigger(fieldsToValidate);
-    console.log('Is valid:', isValid);
     if (isValid) {
       setCurrentStep((prev) => Math.min(prev + 1, 3));
-    } 
+    }
   };
 
   const handleBack = () => {
@@ -80,7 +114,7 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E6F7F9] via-[#F9FAFB] to-[#E6F7F9] py-8 px-4">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {isEditing ? 'Edit Customer' : 'Add New Customer'}
@@ -164,7 +198,7 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
                   <Input
                     label="Phone"
                     type="tel"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+91 94586 58621"
                     {...register('phone')}
                     error={errors.phone?.message}
                   />
@@ -232,19 +266,19 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
                       </button>
                     </div>
                     <div className="space-y-2 text-sm">
-                      <div className="flex">
-                        <span className="text-gray-600 w-24">Name:</span>
+ <div className='flex gap-2 w-fit'>
+                        <span className="text-gray-600 font-semibold ">Name :</span>
                         <span className="text-gray-900 font-medium">{formData.fullName}</span>
                       </div>
                       {formData.email && (
-                        <div className="flex">
-                          <span className="text-gray-600 w-24">Email:</span>
+   <div className='flex gap-2 w-fit'>
+                          <span className="text-gray-600 font-semibold ">Email :</span>
                           <span className="text-gray-900">{formData.email}</span>
                         </div>
                       )}
                       {formData.phone && (
-                        <div className="flex">
-                          <span className="text-gray-600 w-24">Phone:</span>
+   <div className='flex gap-2 w-fit'>
+                          <span className="text-gray-600 font-semibold  ">Phone :</span>
                           <span className="text-gray-900">{formData.phone}</span>
                         </div>
                       )}
@@ -265,13 +299,13 @@ export const AddCustomer = ({ onSubmit, onCancel, initialData, isEditing = false
                         Edit
                       </button>
                     </div>
-                    <div className="space-y-3 text-sm">
-                      <div>
-                        <span className="text-gray-600 block mb-1">Billing Address:</span>
+                    <div className="space-y-2 text-sm">
+                      <div className='flex gap-2'>
+                        <span className="text-gray-600  font-semibold block mb-1">Billing Address :</span>
                         <p className="text-gray-900 whitespace-pre-line">{formData.billingAddress}</p>
                       </div>
-                      <div>
-                        <span className="text-gray-600 block mb-1">Shipping Address:</span>
+                      <div className='flex gap-2'>
+                        <span className="text-gray-600 font-semibold block mb-1">Shipping Address :</span>
                         <p className="text-gray-900 whitespace-pre-line">
                           {formData.shippingSameAsBilling
                             ? 'Same as billing address'
